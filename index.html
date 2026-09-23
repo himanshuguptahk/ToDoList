@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskMaster - Modern To-Do List</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Toast Container -->
+        <div id="toast-container" class="toast-container"></div>
+
+        <!-- Notification Banner -->
+        <div id="reminder-banner" class="reminder-banner hidden">
+            <div class="banner-content">
+                <i class="fa-solid fa-bell fa-bounce text-accent"></i>
+                <div class="banner-text">
+                    <strong id="banner-task-title">Task Title</strong>
+                    <p id="banner-task-desc">Reminder trigger details...</p>
+                </div>
+            </div>
+            <div class="banner-actions">
+                <button id="snooze-btn" class="btn-snooze"><i class="fa-solid fa-clock"></i> Snooze 5m</button>
+                <button id="dismiss-banner-btn" class="btn-dismiss"><i class="fa-solid fa-check"></i> Done</button>
+            </div>
+        </div>
+
+        <!-- Fixed Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="brand">
+                    <i class="fa-solid fa-check-double"></i>
+                    <h2>TaskMaster</h2>
+                </div>
+
+                <nav class="nav-menu">
+                    <button class="nav-btn active" data-filter="all">
+                        <i class="fa-solid fa-inbox"></i> All Tasks
+                        <span class="count" id="count-all">0</span>
+                    </button>
+                    <button class="nav-btn" data-filter="today">
+                        <i class="fa-solid fa-calendar-day"></i> Today
+                        <span class="count" id="count-today">0</span>
+                    </button>
+                    <button class="nav-btn" data-filter="important">
+                        <i class="fa-solid fa-star"></i> Important
+                        <span class="count" id="count-important">0</span>
+                    </button>
+                    <button class="nav-btn" data-filter="completed">
+                        <i class="fa-solid fa-circle-check"></i> Completed
+                        <span class="count" id="count-completed">0</span>
+                    </button>
+                </nav>
+
+                <div class="categories-section">
+                    <div class="categories-header">
+                        <h3>Categories</h3>
+                        <button id="open-cat-modal-btn" class="add-cat-icon-btn" title="Add Category">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="category-list" id="category-list">
+                        <!-- Dynamic Categories -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <button id="enable-notif-btn" class="notif-toggle-btn">
+                    <i class="fa-regular fa-bell"></i> Allow Desktop Alerts
+                </button>
+                <button id="theme-toggle" class="theme-toggle-btn">
+                    <i class="fa-solid fa-moon"></i> Dark Mode
+                </button>
+            </div>
+        </aside>
+
+        <!-- Scrollable Main Content Area -->
+        <main class="main-content">
+            <div class="content-wrapper">
+                <!-- Header -->
+                <header class="header">
+                    <div class="header-title">
+                        <h1 id="view-title">All Tasks</h1>
+                        <p id="current-date">Loading date...</p>
+                    </div>
+
+                    <div class="header-actions">
+                        <div class="search-bar">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="search-input" placeholder="Search tasks...">
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Task Input Card -->
+                <section class="task-input-card">
+                    <form id="add-task-form">
+                        <div class="input-main">
+                            <input type="text" id="task-title-input" placeholder="What needs to be done?" required autocomplete="off">
+                            <button type="submit" class="add-btn">
+                                <i class="fa-solid fa-plus"></i> Add Task
+                            </button>
+                        </div>
+                        <div class="input-details">
+                            <div class="detail-item" title="Due Date">
+                                <i class="fa-solid fa-calendar"></i>
+                                <input type="date" id="task-date-input">
+                            </div>
+                            <div class="detail-item" title="Set Reminder">
+                                <i class="fa-solid fa-bell text-accent"></i>
+                                <input type="datetime-local" id="task-reminder-input">
+                            </div>
+                            <div class="detail-item" title="Category">
+                                <i class="fa-solid fa-tag"></i>
+                                <select id="task-category-input">
+                                    <!-- Dynamic options -->
+                                </select>
+                            </div>
+                            <div class="detail-item" title="Priority">
+                                <i class="fa-solid fa-flag"></i>
+                                <select id="task-priority-input">
+                                    <option value="low">Low Priority</option>
+                                    <option value="medium" selected>Medium Priority</option>
+                                    <option value="high">High Priority</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Progress Bar -->
+                <section class="progress-section">
+                    <div class="progress-info">
+                        <span>Task Completion Rate</span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progress-fill"></div>
+                    </div>
+                </section>
+
+                <!-- Dedicated Scrollable Tasks Container -->
+                <section class="tasks-scroll-container">
+                    <ul class="task-list" id="task-list">
+                        <!-- Dynamic Tasks Render Here -->
+                    </ul>
+                    <div class="empty-state" id="empty-state">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        <p>No tasks found. Relax or create a new task!</p>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Category Modal -->
+    <div class="modal-overlay" id="cat-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Add New Category</h3>
+                <button class="close-modal-btn" id="close-cat-modal">&times;</button>
+            </div>
+            <form id="add-cat-form">
+                <div class="form-group">
+                    <label for="cat-name-input">Category Name</label>
+                    <input type="text" id="cat-name-input" placeholder="e.g. Finance, Projects, Fitness" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="cat-color-input">Badge Color</label>
+                    <input type="color" id="cat-color-input" value="#4f46e5">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancel-cat-btn">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reminder Modal -->
+    <div class="modal-overlay" id="reminder-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Set Task Reminder</h3>
+                <button class="close-modal-btn" id="close-reminder-modal">&times;</button>
+            </div>
+            <form id="reminder-form">
+                <input type="hidden" id="reminder-task-id">
+                <div class="form-group">
+                    <label for="modal-reminder-datetime">Reminder Date & Time</label>
+                    <input type="datetime-local" id="modal-reminder-datetime" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-danger-light" id="remove-reminder-btn">Clear Reminder</button>
+                    <button type="submit" class="btn-primary">Save Reminder</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
